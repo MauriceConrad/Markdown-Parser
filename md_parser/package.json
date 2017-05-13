@@ -1,0 +1,21 @@
+{
+	"name": "md_parser",
+	"version": "1.0.0",
+	"description": "Parser for markdown",
+	"keywords": [
+		"markdown",
+		"parser"
+	],
+	"license": "ISC",
+	"author": "Maurice Conrad",
+	"main": "main.js",
+	"bin": {
+		"md_parser": "cli.js"
+	},
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"dependencies": {
+		"pretty": "^2.0.0"
+	}
+}

@@ -1,0 +1,84 @@
+.markdown {
+  font-family: "Helvetica Neue", "Helvetica", sans-serif;
+  color: #333;
+  font-weight: 300;
+  letter-spacing: 0.3px;
+  text-align: left;
+  padding: 0px 20px;
+  box-sizing: border-box;
+}
+.markdown h1, .markdown h2, .markdown h3 {
+  font-weight: 500;
+  margin: 20px 0px 15px 0px;
+  padding: 0 0 10px 0;
+  border-bottom: 1px solid #dedede;
+}
+.markdown table {
+  border: 1px solid #ababab;
+  border-collapse: collapse;
+  margin: 7px;
+}
+.markdown table tbody tr:nth-child(even) {
+  background-color: #f4f2f2;
+}
+.markdown table tbody tr:nth-child(odd) {
+  background-color: #fff;
+}
+.markdown table tr td, .markdown table tr th {
+  border: 1px solid #c3c3c3;
+  border-right-color: #dddddd;
+  padding: 10px 12px;
+}
+.markdown table tr td:last-child, .markdown table tr th:last-child {
+  border-right-color: #c3c3c3;
+}
+.markdown table thead tr th {
+  font-weight: 500;
+}
+
+.markdown p {
+  white-space: normal;
+  overflow: hidden;
+}
+
+.markdown pre {
+  border-radius: 4px;
+  display: block;
+  padding: 5px;
+}
+.markdown code {
+  font-size: 1em;
+  font-weight: 200;
+  border-radius: 3px;
+}
+.markdown pre code {
+  padding: 15px;
+  padding: 0;
+}
+.markdown *:not(pre) > code, .markdown pre:not(.hljs-highligted) {
+  background-color: #f4f4f4;
+  border: 1px solid #e0e0e0;
+  display: inline-block;
+  padding: 2px;
+}
+
+
+.markdown img {
+  max-width: 100% !important;
+}
+
+
+.markdown ul .sublist {
+  list-style: none;
+}
+
+.markdown blockquote {
+  font-style: italic;
+  font-size: 1.2em;
+}
+.markdown blockquote:before {
+  content: '„';
+}
+.markdown blockquote:after {
+  content: '“';
+}
