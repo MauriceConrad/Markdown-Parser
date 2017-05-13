@@ -17,5 +17,10 @@
 	},
 	"dependencies": {
 		"pretty": "^2.0.0"
-	}
+	},
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/MauriceConrad/Markdown-Parser.git"
+	},
+	"git": "git+https://github.com/MauriceConrad/Markdown-Parser.git"
 }
