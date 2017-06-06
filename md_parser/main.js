@@ -9,20 +9,27 @@ module.exports = {
     options.rules = options.rules || self.rules;
     options.validDocument = options.validDocument || false;
     options.pretty = options.pretty || false;
+    options.disallowedFeatures = options.disallowedFeatures || [];
     // Set to parse ready
     var html = "\n\n" + mdString + "\n";
     // Parse all rules
     options.rules.forEach(function(rule) {
-      // If replace parameters exists use them
-      if ("query" in rule && "replace" in rule) {
-        var regex = new RegExp(rule.query, "g");
-        html = html.replace(regex, rule.replace);
-      }
-      // If a parsing method exists use it
-      if ("parsing" in rule) {
-        html = rule.parsing(html);
+      if (isAllowed(options.disallowedFeatures, rule.classes)) {
+        // If replace parameters exists use them
+        if ("query" in rule && "replace" in rule) {
+          var regex = new RegExp(rule.query, "g");
+          html = html.replace(regex, rule.replace);
+        }
+        // If a parsing method exists use it
+        if ("parsing" in rule) {
+          html = rule.parsing(html);
+        }
       }
     });
+    function isAllowed(disallow, classes = []) {
+      for (var i = 0; i < disallow.length; i++) if (classes.indexOf(disallow[i]) > -1) return false;
+      return true;
+    }
     // Replace all line breaks to avoid bugs in beautifing process
     //html = html.replace(/\n/g, "");
     if (options.validDocument) {

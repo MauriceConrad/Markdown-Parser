@@ -11,6 +11,7 @@ module.exports = (function() { // Retuns a array that is dynamically genrated
     // Pushs the dynamically generated rule to the array
     parsingRules.push({
       name: "h" + level, // Name is just a label
+      classes: ["default", "title"],
       query: '(\\s|\\n)' + ("#").repeat(level) + '\\s(.*)', // Generate the query with dynamic #'s
       replace: '\n$1<h' + level + '>$2</h' + level + '>\n' // Set the h{level}
     });
@@ -18,6 +19,7 @@ module.exports = (function() { // Retuns a array that is dynamically genrated
   // Pushs simple 'static' rules normally to the array
   parsingRules.push({
     name: "lists",
+    classes: ["default"],
     parsing: function(str) {
       // Syntax List Regex = (\*|[0-9]{1,}\.|[a-z]{1,}\.|[A-Z]{1,}\.|(I|V|X){1,}\.)
       var liRegex = /(\n|)( *)(\*|[0-9]{1,}\.|[a-z]{1,}\.|[A-Z]{1,}\.|(I|V|X){1,}\.) .*/;
@@ -76,7 +78,7 @@ module.exports = (function() { // Retuns a array that is dynamically genrated
             var lowerDiff = (levelLower > 0 ? levelLower : 0) - getLineLevel(li[0]);
             // If lower diff is positive, open a new sublist
             if (lowerDiff > 0) {
-              itemStr += '\n<li style="list-style-type: none; counter-increment: none;"><ul style="list-style: ' + lowerType + ';">';
+              itemStr += '\n<li style="list-style: none;"><ul style="list-style: ' + lowerType + ';">';
             }
             // If lower diff is negative, close all sublists (diff / 2 because 2 spaces are a 'tab')
             else if (lowerDiff < 0) {
@@ -92,6 +94,7 @@ module.exports = (function() { // Retuns a array that is dynamically genrated
     }
   }, {
     name: "table",
+    classes: ["github"],
     parsing: function(str) {
       // Selects all table starts with a simple regex that selects the first and second row
       var tableRegex = /\n(\|.*\n){2,}/;
@@ -130,6 +133,7 @@ module.exports = (function() { // Retuns a array that is dynamically genrated
     }
   }, {
     name: "blockquote",
+    classes: ["default"],
     parsing: function(str) {
       var pos = 0;
       var blockQuoteStartRegex = /\n(>.*\n){1,}/;
@@ -150,6 +154,7 @@ module.exports = (function() { // Retuns a array that is dynamically genrated
     }
   }, {
     name: "pre-code",
+    classes: ["github"],
     parsing: function(str) {
       var codeRegex = /`{1,}(([^`\n]*)\n)?([^`]*)`{1,}/;
       var pos = 0;
@@ -173,19 +178,48 @@ module.exports = (function() { // Retuns a array that is dynamically genrated
       return str;
     }
   }, {
-    name: "anchor",
-    query: '([^!?])\\[(.*)\\]\\(([^\"\(\)]*)\\)', // Queries a markdown link
-    replace: '$1<a href="$3">$2</a>'
+    name: "details",
+    classes: ["3rd-party", "extern", "html5"],
+    query: '\n=> ?(.*)\n((\ {2,}.*\n){1,})',
+    replace: '\n\n<details><summary>$1</summary><p>$2</p></details>\n\n'
   }, {
+    name: "frame",
+    classes: ["3rd-party", "extern"],
+    query: '\\$\\[(.*)]\\(([^\"\(\)]*)\\)(\\{([0-9]{1,})?x([0-9]{1,})?\\})?',
+    replace: '<iframe src="$2">$1</iframe>'
+  },/* {
     name: "image",
-    query: '!\\[(.*)]\\(([^\\"\(\\)]*)\\)', // Queries a markdown link that is used for images (GitHub Markdown)
-    replace: '<img src="$2" alt="$1">'
+    classes: ["default"],
+    query: '!\\[(.*)]\\(([^\\"\(\\)]*)\\)(\\{([0-9]{1,})?x([0-9]{1,})?\\})?', // Queries a markdown link that is used for images (GitHub Markdown)
+    replace: '<img src="$2" alt="$1" width="$4" height="$5">'
+  },*/ {
+    name: "image",
+    classes: ["default"],
+    parsing: function(str) {
+      var pos = 0;
+      var imgRegex = new RegExp('!\\[(.*)]\\(([^\\"\(\\)]*)\\)(\\{([0-9]{1,})?x([0-9]{1,})?\\})?');
+      while (str.matchAt(imgRegex, pos) != null) {
+        var image = str.matchAt(imgRegex, pos);
+        var html = '<img src="' + image[2] + '" alt="' + image[1] + '"' + (image[4] ? (' width="' + image[4] + '"') : '') + (image[5] ? (' height="' + image[5] + '"') : '') + '>';
+        str = str.substring(0, image.index) + html + str.substring(image.index + image[0].length);
+        pos = image.index + 1;
+      }
+      return str;
+    }
   }, {
     name: "abbreviation",
+    classes: ["3rd-party", "extern"],
     query: '\\?\\[(.*)]\\(([^\"\(\)]*)\\)',
-    replace: '<abbr title="$2">$1</abbr>'
+    replace: '<abbr title="$2">$1</abbr>',
+    additional: true
+  }, {
+    name: "anchor",
+    classes: ["default"],
+    query: '\\[(.*)\\]\\(([^\"\(\)]*)\\)', // Queries a markdown link
+    replace: '<a href="$2">$1</a>'
   }, {
     name: "paragraph",
+    classes: ["default"],
     // Parsing method to avoid useless and spam paragraphs
     parsing: function(str) {
       // Joins the paragraphs from array (split)
@@ -193,7 +227,7 @@ module.exports = (function() { // Retuns a array that is dynamically genrated
         // Check wether a string is a paragraph. True if no block elements like h1, ul, table etc. are contained and the paragraph isn't empty (paragraph spam)
         function isParagraph(p) {
           // Array contaning the block elemnt tag names that are forbidden
-          var blockTags = ["ul", "table", "blockquote", "pre", "h1", "h2", "h3", "h4", "h5", "h6"]; // Checks for existing block tags because markdown also supports inline html tags and they're therefore 'paragraph spam'
+          var blockTags = ["ul", "table", "blockquote", "pre", "h1", "h2", "h3", "h4", "h5", "h6", "details"]; // Checks for existing block tags because markdown also supports inline html tags and they're therefore 'paragraph spam'
           // Creating the regular expression from the array
           var blockTagRegex = new RegExp('<(' + blockTags.join("|") + ')( [^<>]*|)>[^]*</(' + blockTags.join("|") + ')>');
           // Returns if it matches the regex and isn't empty.
@@ -205,14 +239,17 @@ module.exports = (function() { // Retuns a array that is dynamically genrated
     }
   }, {
     name: "bold",
+    classes: ["default"],
     query: '([^\\\\])\\*{2}([^\\*]*)\\*{2}', // Queries bold text
     replace: '$1<strong>$2</strong>'
   }, {
     name: "italic",
+    classes: ["default"],
     query: '([^\\\\])\\*{1}([^\\s][^\\*\n]*)\\*{1}', // Queries italic text
     replace: '$1<i>$2</i>'
   }, {
     name: "striked",
+    classes: ["github"],
     query: '([^\\\\])~{2}([^\\s][^~]*)~{2}', // Queries italic text
     replace: '$1<s>$2</s>'
   }, {
@@ -243,20 +280,27 @@ window.Markdown = {
     options.rules = options.rules || self.rules;
     options.validDocument = options.validDocument || false;
     options.pretty = options.pretty || false;
+    options.disallowedFeatures = options.disallowedFeatures || [];
     // Set to parse ready
     var html = "\n\n" + mdString + "\n";
     // Parse all rules
     options.rules.forEach(function(rule) {
-      // If replace parameters exists use them
-      if ("query" in rule && "replace" in rule) {
-        var regex = new RegExp(rule.query, "g");
-        html = html.replace(regex, rule.replace);
-      }
-      // If a parsing method exists use it
-      if ("parsing" in rule) {
-        html = rule.parsing(html);
+      if (isAllowed(options.disallowedFeatures, rule.classes)) {
+        // If replace parameters exists use them
+        if ("query" in rule && "replace" in rule) {
+          var regex = new RegExp(rule.query, "g");
+          html = html.replace(regex, rule.replace);
+        }
+        // If a parsing method exists use it
+        if ("parsing" in rule) {
+          html = rule.parsing(html);
+        }
       }
     });
+    function isAllowed(disallow, classes = []) {
+      for (var i = 0; i < disallow.length; i++) if (classes.indexOf(disallow[i]) > -1) return false;
+      return true;
+    }
     // Replace all line breaks to avoid bugs in beautifing process
     //html = html.replace(/\n/g, "");
     if (options.validDocument) {

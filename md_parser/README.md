@@ -28,6 +28,7 @@ The parser parses the following elements in this way:
 * Bold text `**Bold**`
 * Italic text `*Italic*`
 * Striked text `~~Striked~~`
+* Paragraphs (Text that is seperated with line breaks)
 * Lists (a sub list needs two spaces) `* List item`
   * Unsorted lists (circular) `* Item`
   * Sorted lists (numeric) `1. Item`
@@ -35,6 +36,17 @@ The parser parses the following elements in this way:
   * Roman Lists (upper-roman) `I. Item`
 * Tables (Table Syntax of Github Markdown)
 * Code Blocks (inline `<code></code>` and blocked `<pre><code></code></pre>`)
+* Links `[Link Text](http://maurice-conrad.eu)`
+* Images with optional width & height `![Image Name](https://image-url.com/image.png){width,height}` (Link syntax with an `!` prefix)
+* Abbreviations `?[This is an Abbreviation](I meant this!)` (Link syntax with an `?` prefix)
+* iFrames `$[Frame Title](http://maurice-conrad.eu)` (Link syntax with an `$` prefix)
+* Details
+  ```markdown
+  => Summary
+     Detailed information
+  ```
+
+
 
 ### List parsing
 
@@ -69,7 +81,11 @@ var markdownStr = "# Title 1\n## Title 2\n\nParagraph"; // The string containing
 markdown.parse(markdownStr, {
   //rules: [], // Custom parsing rules. Don't use by default
   validDocument: true, // Wether the returned string is a valid HTML document with DOCTYPE, head, body etc.
-  pretty: true // Wether the result is pretty printed
+  pretty: true, // Wether the result is pretty printed
+  disallowedFeatures: [ // Disallowed feature classes e.g. 'github', 'default', '3rd-party'... (Used to prevent bugs with not official features like abbreviations, iframes, details). The classes of a feature are defined its object in the rules array
+    //"html5",
+    //"paragraph"
+  ]
 });
 ```
 
@@ -91,6 +107,7 @@ A rules array contains objects as rules. Every object represents one markdown el
   {...}, // Some other rules
   {
     name: "name-of-element", // The name of the element.
+    classes: ["default", "my-class", "special-feauture-class"],
     query: '(.*)', // A regular expression string
     replace: '<myReplacement>$1</myReplacement>', // The replacement for the regex
     parse: function(str) {

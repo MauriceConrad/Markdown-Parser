@@ -82,3 +82,13 @@
 .markdown blockquote:after {
   content: '“';
 }
+.markdown details {
+  margin: 10px 0px;
+}
+.markdown details summary {
+  outline: none;
+  cursor: pointer;
+}
+.markdown details summary:hover {
+  text-decoration: underline;
+}

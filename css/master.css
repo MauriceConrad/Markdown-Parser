@@ -78,6 +78,11 @@ button .icon {
 button span {
   vertical-align: middle;
 }
+@media screen and (max-width: 410px) {
+  button span {
+    display: none;
+  }
+}
 main {
   flex: 1;
   background-color: #4a4a4a;
@@ -153,7 +158,7 @@ main .tools {
   outline: 2px solid #37b465;
 }
 .render-view, .code-view {
-  height: calc(100% - 50px);
+  height: calc(100% - 40px);
   width: 100%;
 }
 .code-view {
@@ -172,6 +177,7 @@ main .tools {
 .render-view {
   background-color: #fff;
   overflow: scroll;
+  height: calc(100% - 50px);
 }
 .pane-result .view:not(.active) {
   display: none;

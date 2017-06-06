@@ -1,6 +1,6 @@
 {
 	"name": "md_parser",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"description": "Parser for markdown",
 	"keywords": [
 		"markdown",
@@ -12,15 +12,15 @@
 	"bin": {
 		"md_parser": "cli.js"
 	},
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/MauriceConrad/Markdown-Parser.git"
+	},
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"dependencies": {
 		"pretty": "^2.0.0"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git://github.com/MauriceConrad/Markdown-Parser.git"
 	},
 	"git": "git+https://github.com/MauriceConrad/Markdown-Parser.git"
 }

@@ -26,8 +26,6 @@ This is a paragraph!
 
 [Google](http://www.google.de)
 
-[Alert](javascript:alert('This is embeded javascript alert!'))
-
 ## Code
 
 ```javascript
@@ -71,8 +69,29 @@ Nope
 | Item One       | Item Two       |
 | Item Three     | Item Four      |
 
+## Image
+
+The possibility to set the images size is an additional feauture.
+Add `{WIDTHxHEIGHT}` at the end of the image reference.
+
+![Image Title](http://maurice-conrad.eu/acting/images/big-schach-4.jpg){500x}
+
 ## Abbreviation
 
-(This is not a part of the official Markdown syntax but an implementation of ```<abbr></abbr>``` by Maurice Conrad)
+This is not a part of the official Markdown syntax but an implementation of ```<abbr></abbr>``` using the link syntax with the `?` prefix. The parsing rule has the classes `3rd-party` and `extern`.
 
 The ?[Developer (Hover me!)](Maurice Conrad) of this parser loves JavaScript, HTML5 and Markdown ;-)
+
+## iFrame
+
+This is not a part of the official Markdown syntax but an implementation of ```<iframe></iframe>``` using the link syntax with the `$` prefix. The parsing rule has the classes `3rd-party` and `extern`.
+
+$[Frame Title](http://maurice-conrad.eu)
+
+## Details
+
+This is not a part of the official Markdown syntax but an implementation of ```<details></details>```. The parsing rule has the classes `3rd-party`, `extern` & `html5`.
+
+=> Summary
+   Details!
+   More details!
