@@ -17,6 +17,11 @@ module.exports = (function() { // Retuns a array that is dynamically genrated
   }
   // Pushs simple 'static' rules normally to the array
   parsingRules.push({
+    name: "anchor",
+    classes: ["default"],
+    query: '[^?!$]\\[(.*)\\]\\(([^\"\(\)]*)\\)', // Queries a markdown link
+    replace: '<a href="$2">$1</a>'
+  }, {
     name: "lists",
     classes: ["default"],
     parsing: function(str) {
@@ -211,11 +216,6 @@ module.exports = (function() { // Retuns a array that is dynamically genrated
     query: '\\?\\[(.*)]\\(([^\"\(\)]*)\\)',
     replace: '<abbr title="$2">$1</abbr>',
     additional: true
-  }, {
-    name: "anchor",
-    classes: ["default"],
-    query: '\\[(.*)\\]\\(([^\"\(\)]*)\\)', // Queries a markdown link
-    replace: '<a href="$2">$1</a>'
   }, {
     name: "paragraph",
     classes: ["default"],
