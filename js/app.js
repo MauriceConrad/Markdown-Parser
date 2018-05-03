@@ -7,6 +7,8 @@
     var inputFileFaker = document.getElementsByClassName("file-input-fake")[0];
     var mainApp = document.getElementsByClassName("app")[0];
     var btnExport = document.getElementsByClassName("btn-export")[0];
+    var btnCopy = document.getElementsByClassName("btn-copy")[0];
+
 
     // Initialize the input field for rendering
     input.addEventListener("input", function(event) {
@@ -19,6 +21,18 @@
     });
     inputFileFaker.addEventListener("change", function(event) {
       loadMdFile(event.target.files[0]);
+    });
+
+    btnCopy.addEventListener("click", function(event) {
+      var r = document.execCommand("copy");
+
+    });
+    btnCopy.addEventListener("copy", function(event) {
+      event.preventDefault();
+      if (event.clipboardData) {
+        event.clipboardData.setData("text/plain", span.textContent);
+        //console.log(event.clipboardData.getData("text"))
+      }
     });
 
     // Initialize drag n' drop for rendering dragged file

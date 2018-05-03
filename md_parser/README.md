@@ -37,7 +37,7 @@ The parser parses the following elements in this way:
 * Tables (Table Syntax of Github Markdown)
 * Code Blocks (inline `<code></code>` and blocked `<pre><code></code></pre>`)
 * Links `[Link Text](http://maurice-conrad.eu)`
-* Images with optional width & height `![Image Name](https://image-url.com/image.png){width,height}` (Link syntax with an `!` prefix)
+* Images with optional width & height `![Image Name](https://image-url.com/image.png){WIDTHxHEIGHT}` (Link syntax with an `!` prefix)
 * Abbreviations `?[This is an Abbreviation](I meant this!)` (Link syntax with an `?` prefix)
 * iFrames `$[Frame Title](http://maurice-conrad.eu)` (Link syntax with an `$` prefix)
 * Details

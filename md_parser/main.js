@@ -1,6 +1,6 @@
 const pretty = require("pretty");
 
-module.exports = {
+var Markdown = {
   // Requiring rules from external file
   rules: require("./default-rules"),
   parse(mdString, options) {
@@ -42,6 +42,13 @@ module.exports = {
     }
     return html;
   }
+}
+
+if (window) {
+  window.Markdown = Markdown;
+}
+else {
+  module.exports = Markdown;
 }
 
 Array.prototype.indexOfKey = function(value, key, start = 0) {
